@@ -1,11 +1,16 @@
 package main
 
+//Run the below command when ever the static files changed from public folder
+//go-bindata -fs -prefix "public/" public/...
+
 import(	
 	"flag"
 	"fmt"
 	"kafkabrowser/app"
+	//"kafkabrowser/kbapp"
 	"kafkabrowser/server"
 	"gopkg.in/yaml.v2"
+	
 	"io/ioutil"
 	"os"
 )
@@ -64,5 +69,6 @@ func main() {
 	}
 	appconfig.SpalshScreen()
 	server.ServeApp(appconfig.Port)
+	//kbapp.RunApp()
 }
 

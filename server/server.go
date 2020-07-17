@@ -7,6 +7,8 @@ import (
 
 
 func ServeApp(port string) {
-	fs := http.FileServer( http.Dir( "public" ) )
-	log.Fatal(http.ListenAndServe( ":"+port, fs ))
+	//fs := http.FileServer( http.Dir( "public" ) )
+	mux := http.NewServeMux()
+	mux.Handle("/", http.FileServer(AssetFile()))
+	log.Fatal(http.ListenAndServe( ":"+port, mux ))
 }
