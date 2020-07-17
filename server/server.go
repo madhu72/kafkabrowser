@@ -5,11 +5,8 @@ import (
 	"log"
 )
 
-const (
-	port = ":9099"
-)
 
-func ServeApp() {
+func ServeApp(port string) {
 	fs := http.FileServer( http.Dir( "public" ) )
-	log.Fatal(http.ListenAndServe( port, fs ))
+	log.Fatal(http.ListenAndServe( ":"+port, fs ))
 }
