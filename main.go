@@ -1,8 +1,9 @@
 package main
 
-import(
+import(	
 	"flag"
 	"fmt"
+	"kafkabrowser/app"
 	"kafkabrowser/server"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -13,14 +14,16 @@ const (
 	version = "v0.0.1"
 )
 
-func SpalshScreen() {
+type Configuration struct {
+	Port string
+	Rep *app.DbConnector
+}
+
+func (config *Configuration) SpalshScreen() {
 	fmt.Printf("Starting Kafka Browser\n")
 	fmt.Printf("Version: %s\n",version)
 	fmt.Printf("---------------------------------------------------------------------\n")
-}
-
-type Configuration struct {
-	Port string
+	fmt.Printf("Listening on port: %v\n",config.Port)
 }
 
 func ReadFile(filename string) []byte {
@@ -33,7 +36,9 @@ func ReadFile(filename string) []byte {
 
 func main() {
 	var conf string
+	var initdb bool
 	flag.StringVar(&conf, "conf", "", "configuration file name")
+	flag.BoolVar(&initdb, "initdb", false, "initialise database")
 	flag.Parse()
 	appconfig := &Configuration{}
 	err := yaml.Unmarshal([]byte(ReadFile(conf)), &appconfig)
@@ -42,7 +47,22 @@ func main() {
 		fmt.Printf("Error occurred:%v", err)
 		os.Exit(1)
 	}
-	SpalshScreen()
-	fmt.Printf("Listening on port: %v\n",appconfig.Port)
+	appconfig.Rep = &app.DbConnector{Dbname:"kafkabrowser.db"}
+	err =  appconfig.Rep.Connect()
+	if initdb {
+		err = appconfig.Rep.Initialise()
+		if err != nil {
+			fmt.Printf("Error occurred when establish connection with Database.\nError:%v\n", err)
+			os.Exit(1)
+		}
+		err = appconfig.Rep.AddDefaultConfig("Default Kafka Config",fmt.Sprintf("Broker: localhost:9092\nTopic: test\nPartition: 0\n"))
+		if err != nil {
+			fmt.Printf("Failed to create default config.\nError occurred:%v",err)
+			os.Exit(1)
+		}
+		os.Exit(1)
+	}
+	appconfig.SpalshScreen()
 	server.ServeApp(appconfig.Port)
 }
+
