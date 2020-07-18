@@ -3,16 +3,16 @@ package kafka
 import (
 	"context"
 	"fmt"
-	"strconv"
+	"strings"
 	"time"
+
 
 	"github.com/alecthomas/log4go"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 type KafkaConnector struct {
-	host string
-	port int
+	brokers string
 	topic string
 	partition int
 	log      log4go.Logger
@@ -20,9 +20,8 @@ type KafkaConnector struct {
 	reader *kafka.Reader
 }
 
-func (kfk *KafkaConnector) Init(host string, port int, topic string, partition int, log log4go.Logger) {
-	kfk.host = host
-	kfk.port = port
+func (kfk *KafkaConnector) Init(brokers string, topic string, partition int, log log4go.Logger) {
+	kfk.brokers = brokers
 	kfk.topic = topic
 	kfk.partition = partition
 	kfk.log = log
@@ -33,7 +32,7 @@ func (kfk *KafkaConnector) Init(host string, port int, topic string, partition i
 func (kfk *KafkaConnector) InitWriter() error {
 
 	kfk.writer = kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{kfk.host+":"+strconv.Itoa(kfk.port)},
+		Brokers: strings.Split(kfk.brokers,","),
 		Topic:   kfk.topic,
 		//Partition: kfk.partition,
 		Balancer: &kafka.LeastBytes{},
@@ -44,7 +43,7 @@ func (kfk *KafkaConnector) InitWriter() error {
 
 func (kfk *KafkaConnector) InitReader() error {
 	kfk.reader = kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{kfk.host+":"+strconv.Itoa(kfk.port)},
+		Brokers: strings.Split(kfk.brokers,","),
 		Topic:   kfk.topic,
 		//Partition: kfk.partition,
 		MinBytes:  10e3, // 10KB
