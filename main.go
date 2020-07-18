@@ -55,16 +55,18 @@ func main() {
 	appconfig.Rep = &app.DbConnector{Dbname:"kafkabrowser.db"}
 	err =  appconfig.Rep.Connect()
 	if initdb {
-		err = appconfig.Rep.Initialise()
+		err = appconfig.Rep.Initialize()
 		if err != nil {
-			fmt.Printf("Error occurred when establish connection with Database.\nError:%v\n", err)
+			fmt.Printf("Error occurred when initialize Database.\nError: %v\n", err)
 			os.Exit(1)
 		}
-		err = appconfig.Rep.AddDefaultConfig("Default Kafka Config",fmt.Sprintf("Broker: localhost:9092\nTopic: test\nPartition: 0\n"))
+		err = appconfig.Rep.AddDefaultConfig("Default Kafka Config",
+				fmt.Sprintf("---\nBrokers: localhost:9092\nTopic: test\nPartition: 0"))
 		if err != nil {
-			fmt.Printf("Failed to create default config.\nError occurred:%v",err)
+			fmt.Printf("Failed to create default config.\nError occurred: %v",err)
 			os.Exit(1)
 		}
+		fmt.Printf("Initialised database successfully.")
 		os.Exit(1)
 	}
 	appconfig.SpalshScreen()

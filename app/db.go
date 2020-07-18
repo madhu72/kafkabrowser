@@ -24,12 +24,12 @@ func (con *DbConnector) Connect() error {
 	return nil
 }
 
-func (con *DbConnector) Initialise() error {
+func (con *DbConnector) Initialize() error {
 	if con.Db != nil {
 		_, err := con.Db.Exec(`Create Table kfkconfig (
 					kfkid  INTEGER PRIMARY KEY AUTOINCREMENT,
 					title VARCHAR(75) NOT NULL,
-					description TEXT NULL,
+					config TEXT NULL,
 					last_updated_on DATETIME 
 				)`)
 		if err != nil {
@@ -40,13 +40,13 @@ func (con *DbConnector) Initialise() error {
 	return fmt.Errorf("Connection not established to kfkconfig db.")
 }
 
-func (con *DbConnector) AddDefaultConfig(title, description string) error {
+func (con *DbConnector) AddDefaultConfig(title, config string) error {
 	if con.Db!= nil {
-		stmt, err := con.Db.Prepare(`insert into kfkconfig(title,description,last_updated_on) values (?,?,datetime('now'))`)
+		stmt, err := con.Db.Prepare(`insert into kfkconfig(title,config,last_updated_on) values (?,?,datetime('now'))`)
 		if err != nil {
 			return err
 		}
-		_, err = stmt.Exec(title, description)
+		_, err = stmt.Exec(title, config)
 		return err
 	}
 	return fmt.Errorf("Connection not established to kfkconfig db.") 
