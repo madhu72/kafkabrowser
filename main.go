@@ -7,7 +7,6 @@ import(
 	"flag"
 	"fmt"
 	"kafkabrowser/app"
-	//"kafkabrowser/kbapp"
 	"kafkabrowser/server"
 	"gopkg.in/yaml.v2"
 	
@@ -69,6 +68,5 @@ func main() {
 	}
 	appconfig.SpalshScreen()
 	server.ServeApp(appconfig.Port)
-	//kbapp.RunApp()
 }
 
