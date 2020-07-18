@@ -6,12 +6,13 @@ package main
 import(	
 	"flag"
 	"fmt"
-	"kafkabrowser/app"
-	"kafkabrowser/server"
-	"gopkg.in/yaml.v2"
-	
 	"io/ioutil"
 	"os"
+
+	"kafkabrowser/app"
+	"kafkabrowser/server"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (
