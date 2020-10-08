@@ -2,7 +2,7 @@
 
 GO Based Kafka Browser for Managing Kafka Cluster
 
-Estimated Time for ready to use: 15th Oct, 2020
+Estimated Time for ready to use: 15th Oct, 2021
 
 # Getting Started
 
